@@ -1,2 +1,2 @@
 # vue_stady
-Learn to submit
+change submit
