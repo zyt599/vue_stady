@@ -4,9 +4,13 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
 
 Vue.use(VueResource);
 Vue.config.productionTip = false;
+
+let Vuerouter = new VueRouter();
+Vuerouter.push('/goods');
 
 /* eslint-disable no-new */
 new Vue({

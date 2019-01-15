@@ -3,7 +3,7 @@
         <button class="btn  btn-primary" @click="get"> get</button>
         <button class="btn  btn-primary" @click="post"> post</button>
         <button class="btn  btn-primary" @click="json"> json</button>
-        <span> {{msg}}</span>
+        <span> {{ msg }}</span>
     </div>
 </template>
 <script>
@@ -27,7 +27,7 @@ export default {
       this.msg = err;
     },
     get () {
-      this.$http.get('../static/package.json').then(
+      this.$http.get('').then(
         this.successCallback, this.errorCallback
       );
     },
