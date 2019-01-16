@@ -9,12 +9,7 @@
 
 <script>
 export default {
-  name: 'header',
-  methods: {
-    this1 () {
-      alert('dianjia');
-    }
-  }
+  name: 'header'
 };
 </script>
 

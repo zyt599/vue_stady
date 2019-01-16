@@ -28,7 +28,7 @@ export default {
   }
 };
 </script>
-<style lang='stylus' rel='stylesheet/stylus'>
+<style lang="stylus"  rel="stylesheet/stylus">
 .tab
   display: flex
   width: 100%
@@ -38,7 +38,10 @@ export default {
     flex: 1
     text-align: center
     & > a
-        display: block
-        font-size: 14px
-        color: rgb(77,85,93)
+      display: block
+      font-size: 14px
+      color: rgb(77, 85, 93)
+      &.active
+       color: rgb(240, 20, 20)
+
 </style>
