@@ -1,41 +1,76 @@
 <template>
     <div class="header">
         <div class="content_wrapper">
-            <div class="bulletin_wrapper">
-                <div class="avatar"><img :src="seller.avatar" width="64" height="64"/></div>
-                <div class="content">
+            <div class="avatar"><img :src="seller.avatar" width="64" height="64"/></div>
+            <div class="content">
+                <div class="title">
+                    <span class="brand"></span>
+                    <span class="name">{{seller.name}} </span>
+                </div>
+                <div class="description">
+                    {{seller.description}}/{{seller.deliveryTime}}分钟送达
+                </div>
+                <div class="supports" v-if="seller.supports" @click="toggleDetaili">
+                    <span class="icon" :class="classmap[seller.supports[0].type]"></span>
+                    <span class="text">{{seller.supports[0].description}}</span>
+                </div>
+            </div>
+            <div class="supports_count" v-if="seller.supports" @click="toggleDetaili">
+                <span class="conut">{{seller.supports.length}}个</span>
+                <i class="icon-keyboard_arrow_right"></i>
+            </div>
+        </div>
+        <div class="bulletin_wrapper">
+            <span class="bulletin_title"></span><span class="bulletin_text">{{seller.bulletin}}</span>
+            <i class="icon-keyboard_arrow_right"></i>
+        </div>
+        <div class="background">
+            <img :src="seller.avatar" width="100%" height="100%"/>
+        </div>
+        <div class="detail" v-show="detailShow">
+            <div class="detail_wrapper clearfix">
+                <div class="detail_main">
+                    <h1 class="name">{{seller.name}}</h1>
+                    <div class="star_wrapper">
+                        <star :size="48" :score="seller.score"></star>
+                    </div>
                     <div class="title">
-                        <span class="brand"></span>
-                        <span class="name">{{seller.name}} </span>
-                    </div>
-                    <div class="description">
-                        {{seller.description}}/{{seller.deliveryTime}}分钟送达
-                    </div>
-                    <div class="supports" v-if="seller.supports">
-                        <span class="icon" :class="classmap[seller.supports[0].type]"></span>
-                        <span class="text">{{seller.supports[0].description}}</span>
+                        <div class="line"></div>
+                        <div class="text">优惠信息</div>
+                        <div class="line"></div>
                     </div>
                 </div>
-                <div class="supports_count" v-if="seller.supports">
-                    <span class="conut">{{seller.supports.length}}个</span>
-                    <i class="icon-keyboard_arrow_right"></i>
-                </div>
             </div>
-            <div class="sell_box">
-
-            </div>
+            <div class="detail_close icon-close" @click="toggleDetaili"></div>
         </div>
     </div>
 </template>
 
 <script>
+import star from '../star/star';
+
 export default {
   name: 'header',
   props: {
     seller: {}
   },
+  data  () {
+    return {
+      detailShow: false,
+      itemClasses: {}
+
+    };
+  },
+  methods: {
+    toggleDetaili () {
+      this.detailShow = !this.detailShow;
+    }
+  },
   created () {
     this.classmap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+  },
+  components: {
+    star: star
   }
 };
 </script>
@@ -45,7 +80,9 @@ export default {
 
 .header
     color #ffffff
-    background #999
+    position relative
+    overflow hidden
+    background rgba(7,17,27,0.5)
     .content_wrapper
         position relative
         padding 24px 12px 18px 24px
@@ -102,7 +139,7 @@ export default {
         .supports_count
             position absolute
             right 12px
-            bottom 18px
+            bottom 14px
             padding 0 8px
             height 24px
             line-height 24px
@@ -111,7 +148,88 @@ export default {
             text-align center
             .conut
                 font-size 12px
+                vertical-align top
             .icon-keyboard_arrow_right
+                line-height 24px
+                margin-left 2px
                 font-size 12px
+    .bulletin_wrapper
+        height 28px
+        line-height 28px
+        padding 0 22px 0 12px
+        white-space nowrap
+        overflow  hidden
+        text-overflow ellipsis
+        background rgba(7,17,27,0.2)
+        position relative
+        .bulletin_title
+            display inline-block
+            bg_img('bulletin')
+            width 22px
+            height 12px
+            background-size 100% 100%
+            vertical-align middle
+        .bulletin_text
+            font-size 10px
+            margin  0 4px
+        .icon-keyboard_arrow_right
+            position absolute
+            font-size 10px
+            right 12px
+            top 8px
+    .background
+        width 100%
+        position absolute
+        top 0
+        left 0
+        z-index -1
+        filter blur(10px)
+    .detail
+        position fixed
+        z-index 100
+        width 100%
+        height 100%
+        overflow auto
+        background rgba(7,17,27,0.8)
+        top 0
+        left 0
+        .detail_wrapper
+            min-height 100%
+            width 100%
+            .detail_main
+                padding  64px 36px
+                width 100%
+                height 100%
+                .name
+                    text-align center
+                    font-size 16px
+                    color rgb(255,255,255)
+                    line-height 16px
+                    font-weight 700
+                .star_wrapper
+                    margin 18px auto 0
+                    padding 2px 0
+                    text-align center
+                .title
+                    display flex
+                    width 100%
+                    margin 15px auto 24px
+                    .text
+                        padding 0 12px
+                        font-weight 500
+                        font-size 14px
+                    .line
+                        flex 1
+                        position relative
+                        top -6px
+                        border-bottom 1px solid rgba(255,255,255,0.2)
+        .detail_close
+            position relative
+            width 32px
+            height 32px
+            margin -64px auto 0
+            clear both
+            text-align center
+            font-size 32px
 
 </style>
