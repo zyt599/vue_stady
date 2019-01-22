@@ -39,6 +39,20 @@
                         <div class="text">优惠信息</div>
                         <div class="line"></div>
                     </div>
+                    <ul v-if="seller.supports" class="supports">
+                        <li v-for="(item,index) in seller.supports" :key="item.text" class="support_item">
+                            <span class="icon" :class="classmap[seller.supports[index].type]"></span>
+                            <span class="text">{{ seller.supports[index].description }}</span>
+                        </li>
+                    </ul>
+                     <div class="title">
+                        <div class="line"></div>
+                        <div class="text">商家公告</div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="infomation">
+                        {{seller.bulletin}}
+                    </div>
                 </div>
             </div>
             <div class="detail_close icon-close" @click="toggleDetaili"></div>
@@ -57,8 +71,8 @@ export default {
   data  () {
     return {
       detailShow: false,
-      itemClasses: {}
-
+      itemClasses: {},
+      suppots: this.seller.suppots
     };
   },
   methods: {
@@ -193,6 +207,14 @@ export default {
         background rgba(7,17,27,0.8)
         top 0
         left 0
+        .detail_close
+            position relative
+            width 32px
+            height 32px
+            margin -64px auto 0
+            clear both
+            text-align center
+            font-size 32px
         .detail_wrapper
             min-height 100%
             width 100%
@@ -213,23 +235,51 @@ export default {
                 .title
                     display flex
                     width 100%
-                    margin 15px auto 24px
+                    margin 28px auto 24px
                     .text
                         padding 0 12px
-                        font-weight 500
+                        font-weight 700
                         font-size 14px
                     .line
                         flex 1
                         position relative
                         top -6px
                         border-bottom 1px solid rgba(255,255,255,0.2)
-        .detail_close
-            position relative
-            width 32px
-            height 32px
-            margin -64px auto 0
-            clear both
-            text-align center
-            font-size 32px
+                .supports
+                    display block
+                    width 100%
+                    .support_item
+                        padding 0 12px
+                        display block
+                        margin-bottom 12px
+                        &:last-child
+                            margin-bottom 0
+                        .icon
+                            display inline-block
+                            width 16px
+                            height 16px
+                            vertical-align top
+                            margin 0 6px 0 0
+                            background-size 100% 100%
+                            background-repeat no-repeat
+                            &.decrease
+                                bg_img('decrease_2')
+                            &.discount
+                                bg_img('discount_2')
+                            &.guarantee
+                                bg_img('guarantee_2')
+                            &.invoice
+                                bg_img('invoice_2')
+                            &.special
+                                bg_img('special_2')
+                        .text
+                            font-size 12px
+                            line-height 12px
+                            font-weight 200
+                .infomation
+                    font-size 12px
+                    font-weight 200
+                    line-height 24px
+                    padding  0 12px
 
 </style>

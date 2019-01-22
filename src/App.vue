@@ -26,7 +26,6 @@ export default {
 
   },
   created () {
-    // (getSeller) => {
     this.$http.get('/api/seller').then((result) => {
       if (result.body.errno === errok) {
         this.seller = result.body.data;

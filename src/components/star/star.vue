@@ -1,6 +1,6 @@
 <template>
     <div class="star" :class="startScore">
-        <span  class="star_item" :key="itemclass" v-for="itemclass in result"  :class="itemclass" track-by="$index"></span>
+        <span track-by="$index" class="star_item" :key="itemclass.text" v-for="itemclass in result"  :class="itemclass" ></span>
     </div>
 </template>
 
@@ -46,7 +46,6 @@ export default {
 
 .star
     display block
-    height 50px
     .star_item
         line-height 24px
         display inline-block
