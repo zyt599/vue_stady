@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-unused-vars */
 <template>
 <div class="goods">
     <div class="menu_wrapper" ref="menuWrapper">
         <ul>
-            <li :key="item.text" v-for="(item,index) in goods" class="menu_item" :class="{'current':currentIndex===index}">
+            <li :key="item.text" v-for="(item,index) in goods" class="menu_item" :class="{'current':currentIndex===index}" @click="menuClick(index,$event)" >
                 <span class="text border-1px" >
                     <span v-show="item.type>0" class="icon" :class="classmap[item.type]"></span>
                     {{item.name}}
@@ -36,15 +35,21 @@
             </li>
         </ul>
     </div>
+    <shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" ></shopcart>
 </div>
 </template>
 
 <script>
 // eslint-disable-next-line no-unused-vars
 import BetterScroll from 'better-scroll';
+import ShopCart from '../shopcart/shopcart';
+
 export default {
   props: {
     seller: {}
+  },
+  components: {
+    shopcart: ShopCart
   },
   data () {
     return {
@@ -55,15 +60,19 @@ export default {
   },
   computed: {
     currentIndex: function () {
-      for (var i = 0; i < this.listHeight.length; i++) {
+      for (let i = 0; i < this.listHeight.length; i++) {
         let height1 = this.listHeight[i];
         let height2 = this.listHeight[i + 1];
-        console.log(i);
-        if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+        if (!height2 || (this.scrollY + 120 >= height1 && this.scrollY + 120 < height2)) {
           return i;
         }
-        return 0;
       }
+    }
+  },
+  watch: {
+    'currentIndex': function (index) {
+      let menuList = this.$refs.menuWrapper.getElementsByClassName('menu_item');
+      this.menuScroll.scrollToElement(menuList[index], 1000);
     }
   },
   created () {
@@ -79,10 +88,17 @@ export default {
     });
   },
   methods: {
+    //  导航点击
+    menuClick (index) {
+      this.foodScroll.scrollTo(0, -this.listHeight[index], 1000);
+    },
     //   初始化滚动条
     _initScroll () {
-      this.menuScroll = new BetterScroll(this.$refs.menuWrapper, {});
+      this.menuScroll = new BetterScroll(this.$refs.menuWrapper, {
+        probeType: 3,
+        click: true});
       this.foodScroll = new BetterScroll(this.$refs.foodsWrapper, {probeType: 3});
+      // 监听菜单滚动
       this.foodScroll.on('scroll', (pos) => {
         this.scrollY = Math.abs(Math.round(pos.y));
       });
@@ -98,11 +114,12 @@ export default {
         this.listHeight.push(height);
       }
     }
+
   }
 };
 </script>
 
-<style scoped lang="stylus">
+<style  lang="stylus">
 @import "../../common/stylus/mixxin.styl";
 .goods
     display flex
@@ -122,12 +139,12 @@ export default {
             width 100%
             line-height 14px
             padding 0 12px
-            background #7e8c8d
             &.current
                 background #ffffff
                 font-weight 700
                 margin-top -1px
                 z-index 10
+                position relative
                 .text
                   border-none()
           &:last-child
