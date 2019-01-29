@@ -4,7 +4,7 @@
     <div class="menu_wrapper" ref="menuWrapper">
         <ul>
             <li :key="item.text" v-for="(item,index) in goods" class="menu_item" :class="{'current':currentIndex===index}" @click="menuClick(index,$event)" >
-                <span class="text border-1px" >
+                <span class="text border-1px">
                     <span v-show="item.type>0" class="icon" :class="classmap[item.type]"></span>
                     {{item.name}}
                 </span>
@@ -27,7 +27,7 @@
                             <div class="price">
                                 <span class="food_price">￥{{food.price}}</span>
                                 <span v-show="food.oldPrice" class="old_price">￥{{food.oldPrice}}</span>
-                                <i class="icon"></i>
+                              <span class="choose_wrapper"><cartcontrol :food="food"></cartcontrol></span>
                             </div>
                         </span>
                     </li>
@@ -35,7 +35,7 @@
             </li>
         </ul>
     </div>
-    <shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" ></shopcart>
+    <shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" :selectsFoods="selectFoods"></shopcart>
 </div>
 </template>
 
@@ -43,13 +43,15 @@
 // eslint-disable-next-line no-unused-vars
 import BetterScroll from 'better-scroll';
 import ShopCart from '../shopcart/shopcart';
+import Cartcontrol from '../cartcontrol/cartcontrol';
 
 export default {
   props: {
     seller: {}
   },
   components: {
-    shopcart: ShopCart
+    shopcart: ShopCart,
+    cartcontrol: Cartcontrol
   },
   data () {
     return {
@@ -59,6 +61,7 @@ export default {
     };
   },
   computed: {
+    // 计算当前访问菜单索引
     currentIndex: function () {
       for (let i = 0; i < this.listHeight.length; i++) {
         let height1 = this.listHeight[i];
@@ -67,13 +70,44 @@ export default {
           return i;
         }
       }
+    },
+    // 监听选择商品
+    selectFoods: function () {
+      let selectFoods = [];
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            selectFoods.push(food);
+          }
+        });
+      });
+      return selectFoods;
+    },
+    //  监听导航选择商品
+    menuSelect () {
+      let count = [];
+      for (var i in this.goods) {
+        let number = 0;
+        this.goods[i].foods.forEach((food) => {
+          if (food.count) {
+            number += food.count;
+            return number;
+          }
+        });
+        count.push(number);
+        console.log(this.goods[i].name + '有' + number + '个已选择');
+      };
+      console.log(count);
+      return count;
     }
   },
   watch: {
+    // 监听超出屏幕的菜单滚动
     'currentIndex': function (index) {
       let menuList = this.$refs.menuWrapper.getElementsByClassName('menu_item');
       this.menuScroll.scrollToElement(menuList[index], 1000);
     }
+
   },
   created () {
     this.classmap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
@@ -97,7 +131,9 @@ export default {
       this.menuScroll = new BetterScroll(this.$refs.menuWrapper, {
         probeType: 3,
         click: true});
-      this.foodScroll = new BetterScroll(this.$refs.foodsWrapper, {probeType: 3});
+      this.foodScroll = new BetterScroll(this.$refs.foodsWrapper, {
+        probeType: 3,
+        click: true});
       // 监听菜单滚动
       this.foodScroll.on('scroll', (pos) => {
         this.scrollY = Math.abs(Math.round(pos.y));
@@ -175,7 +211,6 @@ export default {
                     bg_img('invoice_3')
                 &.special
                     bg_img('special_3')
-
     .foods_wrapper
         flex 1
         .food_item
@@ -212,6 +247,7 @@ export default {
                         .count
                             margin-right 12px
                     .price
+                        position relative
                         .food_price,.old_price
                             font-weight 700
                             line-height 24px
@@ -223,6 +259,10 @@ export default {
                             font-size 10px
                             color rgb(147,153,159)
                             text-decoration line-through
+                        .choose_wrapper
+                            position absolute
+                            right 0
+                            width auto
 
             .title
                 display block
