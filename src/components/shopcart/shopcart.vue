@@ -138,7 +138,7 @@ export default {
     },
     showShopList: function () {
       if (this.showShopList) {
-        this.goodsDetailHeight;
+        // this.goodsDetailHeight;
         console.log();
       }
     }
