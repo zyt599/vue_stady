@@ -17,9 +17,10 @@
           <div class="pay" :class="payClass">{{payDesc}}</div>
         </div>
       </div>
-    <div class="shopList" v-show="showShopList">
-      <div class="shopListbg" @click="ToggleShopList"></div>
-      <div class="shop_wrapper" ref="shopWrapper">
+    <transition name="fold">
+      <div class="shopList" v-show="showShopList">
+        <!--<div class="shopListbg" @click="ToggleShopList"></div>-->
+        <div class="shop_wrapper" ref="shopWrapper">
         <div class="title"><span class="cart">购物车</span><span class="empty" @click="emptyAll">清空</span></div>
         <div class="shop" ref="shop">
           <ul class="shopList_wrapper" ref="shoplist">
@@ -35,8 +36,10 @@
         </ul>
         </div>
       </div>
-    </div>
- </div>
+      </div>
+    </transition>
+
+  </div>
 </template>
 
 <script>
@@ -82,6 +85,7 @@ export default {
       if (this.totalCount) {
         this.showShopList = !this.showShopList;
       };
+      this.goodsDetailHeight();
     },
     // 清空
     emptyAll () {
@@ -138,7 +142,6 @@ export default {
     },
     showShopList: function () {
       if (this.showShopList) {
-        // this.goodsDetailHeight;
         console.log();
       }
     }
@@ -155,6 +158,7 @@ export default {
   z-index 50
   width 100%
   height 48px
+
   .content
     display flex
     background #141d27
@@ -247,6 +251,11 @@ export default {
     min-height 100%
     width 100%
     min-height 100%
+    &.fold-enter-active,&.fold-leave
+      transition all .4s
+      transform translate3d(0,0,0)
+    &fold-leave-active,&.fold-enter
+      transform translate3d(0,100%,0)
     .shopListbg
       display block
       height 100%

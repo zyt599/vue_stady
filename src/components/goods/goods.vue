@@ -71,7 +71,7 @@ export default {
         }
       }
     },
-    // 监听选择商品
+    // 计算选择商品
     selectFoods: function () {
       let selectFoods = [];
       this.goods.forEach((good) => {
@@ -83,7 +83,7 @@ export default {
       });
       return selectFoods;
     },
-    //  监听导航选择商品
+    //  计算导航选择商品
     menuSelect () {
       let count = [];
       for (var i in this.goods) {
